@@ -1,13 +1,50 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>To-do list</h1>
-    <p>Welcome to To-do List!</p>
-    <h2>Dynamic content</h2>
-    <p>To-do List has the following record counts:</p>
-    <ul>
-        <li><strong>Tasks:</strong> {{ num_tasks }}</li>
-        <li><strong>Tags:</strong> {{ num_tags }}</li>
-    </ul>
+    <h1>
+      TODO List
+    <a href="{% url 'todo:task-create' %}" class="btn btn-primary link-to-page">
+      Add task
+    </a>
+    </h1>
+  {% for task in task_list %}
+    <h2 class="task-content">
+      {{ task.content }}
+      {% if done %}
+        <span style="color:green;" class="task-status">
+          Done
+        </span>
+        <a href="{% url 'todo:task-complete-undo' task.id %}" class="btn btn-warning link-to-page complete">
+          Undo
+        </a>
 
+      {% else %}
+        <span style="color:red;" class="task-status">
+          Not Done
+        </span>
+        <a href="{% url 'todo:task-complete-undo' task.id %}" class="btn btn-success link-to-page complete">
+          Complete
+        </a>
+      {% endif %}
+    </h2>
+    <p style="font-size: 15px">
+      Created at: {{ task.create_date }}
+    </p>
+    <h3>
+      Tags:
+      {% for tag in task.tags.all %}
+        <a href="" class="btn btn-default link-to-page">
+          {{ tag.name }}
+        </a>
+      {% endfor %}
+    </h3>
+    <a href="{% url 'todo:task-update' task.id %}" class="btn btn-success link-to-page">
+      Update task details
+    </a>
+    <a href="{% url 'todo:task-delete' task.id %}" class="btn btn-danger link-to-page">
+      Delete task
+    </a>
+    <hr class="solid divider">
+    <br>
+  {% endfor %}
 {% endblock %}
